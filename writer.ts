@@ -1,6 +1,7 @@
 import Base from "./_base.ts";
 import { buf_append, buf_write, long_to_buf } from "./_utils.ts";
 import { encode } from "https://deno.land/std/encoding/utf8.ts";
+import { existsSync } from "https://deno.land/std/fs/exists.ts";
 
 export class Writer extends Base {
   /**
@@ -9,6 +10,9 @@ export class Writer extends Base {
    */
   constructor(readonly filename: string) {
     super();
+    if (existsSync(filename)) {
+      this.buf = Deno.readFileSync(filename);
+    }
   }
 
   /**
