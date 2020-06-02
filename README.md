@@ -5,11 +5,14 @@
 ## Example
 
 ```ts
-import { Writer } from "https://deno.land/x/binary/mod.ts";
+import { Writer, Reader } from "https://deno.land/x/binary/mod.ts";
 
 const writer = new Writer("out.bin");
-writer.writeUTF8String("Hello World!");
+writer.writeUTF8StringNT("Hello World!");
 writer.save();
+
+const reader = new Reader("out.bin");
+console.log(reader.readUTF8StringNT()) // Hello World!
 ```
 
 ## Permissions
