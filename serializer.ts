@@ -1,4 +1,4 @@
-export default class Serializer {
+export class Serializer {
   static serialize(obj: object): Uint8Array {
     const str = JSON.stringify(obj);
     const encoder = new TextEncoder();
