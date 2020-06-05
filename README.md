@@ -5,14 +5,27 @@
 ## Example
 
 ```ts
-import { Writer, Reader } from "https://deno.land/x/binary/mod.ts";
+import { Writer, Reader, Serializer } from "https://deno.land/x/binary/mod.ts";
 
-const writer = new Writer("out.bin");
+// Writer example
+const writer: Writer = new Writer("out.bin");
 writer.writeUTF8StringNT("Hello World!");
 writer.save();
 
-const reader = new Reader("out.bin");
+// Reader example
+const reader: Reader = new Reader("out.bin");
 console.log(reader.readUTF8StringNT()) // Hello World!
+
+// Serializer example
+class Animal {
+  constructor(private name: string) {}
+  getName(): string {
+    return this.name;
+  }
+}
+
+const bytes: Uint8Array = Serializer.serialize(new Animal("Rabbit"));
+const instance: Animal = Serializer.deserialize(bytes, Animal);
 ```
 
 ## Permissions
@@ -22,19 +35,19 @@ console.log(reader.readUTF8StringNT()) // Hello World!
 
 ## API
 
-### Base
+### Stream (Abstract)
 
 #### protected offset: number = 0;
 
-Base offset.
+Offset in stream.
 
-#### protected buf: Uint8Array = new Uint8Array();
+#### protected buffer: Uint8Array = new Uint8Array();
 
-Base buffer.
+Byte array.
 
-#### setPosition(offset: number): void
+#### setPosition(offset: number)
 
-Set a new position in the buffer.
+Set new position.
 
 | Params | Type   | Description         |
 | ------ | ------ | ------------------- |
@@ -42,7 +55,7 @@ Set a new position in the buffer.
 
 #### getPosition(): number
 
-Get a current position in the buffer.
+Get current position.
 
 | Return | Description      |
 | ------ | ---------------- |
@@ -50,7 +63,7 @@ Get a current position in the buffer.
 
 #### getSource(): Uint8Array
 
-Get source buffer.
+Get source byte array.
 
 | Return     | Description   |
 | ---------- | ------------- |
@@ -216,3 +229,30 @@ Write UTF8 string with Null-Terminated byte in buffer.
 #### writer.save(): void
 
 Saves the current buffer to the file specified during initialization.
+
+### Serializer
+
+#### serialize(obj: object): Uint8Array
+
+Serializes object.
+
+| Params | Type   | Description                     |
+| ------ | ------ | ------------------------------- |
+| obj    | object | Any object                      |
+
+| Return | Description                 |
+| ------ | --------------------------- |
+| Uint8Array | Serialized UTF8 bytes array |
+
+#### deserialize(bytes: Uint8Array, type: any): any
+
+Deserializes object.
+
+| Params | Type   | Description                     |
+| ------ | ------ | ------------------------------- |
+| bytes    | Uint8Array | Serialized UTF8 bytes array      
+| type    | any | Object instance type                  |
+
+| Return | Description                 |
+| ------ | --------------------------- |
+| any | Any object |
